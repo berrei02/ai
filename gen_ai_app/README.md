@@ -1,4 +1,4 @@
-# LangChain
+# 🦜🔗  LangChain
 
 [LangChain](https://python.langchain.com/docs/get_started/introduction) is a framework for developing applications powered by language models. It enables applications that are agentic and data-ware.
 
@@ -6,13 +6,15 @@ This simplistict fastapi & LangChain project builds a suggestion engine that bra
 
 Why hypotheses you might ask? I wanted to check out in how far an api could be built that acts as a Product Manager or Product Designer co-pilot for hypothesis generation about potential product features.
 
+You simply provide a Product Context and the API responds with a set of 5 different hypotheses how you could improve your Software Product.
+
 ## Reproduce
 
 ```shell
     virtualenv venv
     source venv/bin/activate
     > (venv) pip install -r requirements.txt
-    > make api
+    > (venv) make api
 ```
 
 ## Prerequisites
