@@ -1,4 +1,4 @@
-# 🦜🔗  LangChain
+# 🦜🔗  LangChain & FastAPI based Hypothesis Hallucination
 
 [LangChain](https://python.langchain.com/docs/get_started/introduction) is a framework for developing applications powered by language models. It enables applications that are agentic and data-ware.
 
@@ -54,6 +54,15 @@ The API wraps LangChain functionality and delivers a result with
         "hypothesis": "IF we introduce a feature for users to track their progress and set mental health goals, THEN there will be an improvement in happiness."
     }
 ]
+```
+
+If the API runs into problems (e.g. the LLM predicts a bad output format which cannot be parsed), a custom error is raised.
+The API responds with a `501` and the body:
+
+```json
+{
+    "detail": "Text response from LLM cannot be mapped to Array of Dict format."
+}
 ```
 
 ## Caveats

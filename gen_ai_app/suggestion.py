@@ -1,3 +1,6 @@
+import json
+import dotenv
+
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts.chat import (
     ChatPromptTemplate,
@@ -5,20 +8,11 @@ from langchain.prompts.chat import (
     HumanMessagePromptTemplate,
 )
 from langchain.chains import LLMChain
-from langchain.schema import BaseOutputParser
-import json
-import dotenv
+from parser import ArrayOfDictResponseParser
 
 OPENAI_API_KEY = dotenv.get_key(".env", "OPENAI_API_KEY")
 
-class CommaSeparatedListOutputParser(BaseOutputParser):
-    """Parse the output of an LLM call to a comma-separated list."""
-
-    def parse(self, text: str) -> list[dict[str, str]]:
-        """Parse the output of an LLM call."""
-        return json.loads(text)
-
-template = """
+TEMPLATE = """
 You are a helpful friend of a Product Manager who generates product improvement
 hypotheses.
 
@@ -37,10 +31,18 @@ It follows the following logic: If we do "product change", then "improvement in 
 Each json object has the key "hypothesis" and starts with an IF statement.
 """
 
+
+
 class SuggestionEngine():
-    system_message_prompt = SystemMessagePromptTemplate.from_template(template)
+    system_message_prompt = SystemMessagePromptTemplate.from_template(TEMPLATE)
 
     def suggest(self, product_context: str) -> json:
+        """
+        Takes in a product context description and based with further
+        instructions passes it to the LLM which should return a 
+        array of dicts, where each dict is a suggested hypothesis to improve
+        the product in its given context.
+        """
 
         human_template = "product_context: {product_context}"
         human_message_prompt = HumanMessagePromptTemplate.from_template(human_template)
@@ -49,6 +51,6 @@ class SuggestionEngine():
         chain = LLMChain(
             llm=ChatOpenAI(openai_api_key=OPENAI_API_KEY),
             prompt=chat_prompt,
-            output_parser=CommaSeparatedListOutputParser()
+            output_parser=ArrayOfDictResponseParser()
         )
         return chain.run(product_context)
